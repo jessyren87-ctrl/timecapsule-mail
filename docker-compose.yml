@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: tc
+      POSTGRES_PASSWORD: tcpass
+      POSTGRES_DB: tc
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: ./api
+    env_file:
+      - ./api/.env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+
+  worker:
+    build: ./api
+    env_file:
+      - ./api/.env
+    depends_on:
+      - db
+    command: ["python", "-m", "app.worker"]
+    environment:
+      PYTHONUNBUFFERED: "1"
+      WORKER_POLL_SECONDS: "5"
+
+
+volumes:
+  pgdata:
