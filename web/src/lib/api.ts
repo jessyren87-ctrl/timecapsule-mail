@@ -8,6 +8,11 @@ export function setToken(token: string) {
   localStorage.setItem("tc_token", token);
 }
 
+export function clearToken() {
+  localStorage.removeItem("tc_token");
+}
+
+
 export async function api<T>(
   path: string,
   method: "GET" | "POST" = "GET",
