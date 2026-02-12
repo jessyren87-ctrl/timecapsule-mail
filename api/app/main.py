@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
@@ -10,6 +11,18 @@ from .schemas import RegisterReq, LoginReq, AuthResp, MeResp, CreateLetterReq, L
 from .auth import hash_password, verify_password, create_token, get_current_user
 
 app = FastAPI(title="TimeCapsule API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # MVP: 启动时建表（上线建议用 Alembic migration）
 # Base.metadata.create_all(bind=engine)
